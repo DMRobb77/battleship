@@ -5,12 +5,18 @@ class Gameboard {
     }
 
     place(ship, bowLocation, orientation) {
-        this.checkPlacementAvailable(bowLocation, orientation, ship.length);
-
-
+        const placement = this.checkPlacementAvailable(bowLocation, orientation, ship.length);
+        if (placement){
+            this.remainingShips.push({ship, locations: placement});
+        } else {
+            console.log('Ship cannot legally be placed here.');
+            return false;
+        }
+        return this.remainingShips;
     }
 
     checkPlacementAvailable(start, orientation, length) {
+        const invalidPlacement = false;
         const convertedStart = this.convertLocationFromString(start);
         const proposedPlacement = [];
         proposedPlacement.push(convertedStart);
@@ -37,9 +43,60 @@ class Gameboard {
             }
         }
 
+        // Check if this placement would extend off of the board
 
-        console.log(proposedPlacement);
+        for (let j = 0; j < length; j += 1){
+            if (proposedPlacement[j][0] <= 0 || proposedPlacement[j][0] > 10){
+                return invalidPlacement;
+            } 
+            
+            if (proposedPlacement[j][1] <= 0 || proposedPlacement[j][1] > 10){
+                return invalidPlacement;
+            };
+        }
 
+        // Check if this placement would collide with any other placed ships
+
+
+
+
+        function checkForCollision(placement, remainingShips) {
+            for (let i = 0; i < remainingShips.length; i++) {
+              const ship = remainingShips[i];
+          
+              for (let j = 0; j < placement.length; j++) {
+                const proposedCoordinate = placement[j];
+          
+                // Check if the proposedCoordinate matches any location in the ship
+                const found = ship.locations.some(
+                  (location) => location[0] === proposedCoordinate[0] && location[1] === proposedCoordinate[1]
+                );
+          
+                if (found) {
+                  console.log('Collision detected!');
+                  return true; // Collision detected, return true
+                }
+              }
+            }
+          
+            // No collision detected, return false
+            return false;
+          }
+          
+          const collisionDetected = checkForCollision(proposedPlacement, this.remainingShips);
+          
+          if (collisionDetected) {
+            console.log('There is a collision!');
+            return invalidPlacement;
+          } 
+            console.log('No collision detected.');
+          
+          
+
+
+
+
+        return proposedPlacement;
     }
 
     convertLocationFromString(loc){
