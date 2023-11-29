@@ -15,6 +15,28 @@ class Gameboard {
         return this.remainingShips;
     }
 
+    checkForCollision(placement, remainingShips) {
+        for (let i = 0; i < remainingShips.length; i++) {
+          const ship = remainingShips[i];
+      
+          for (let j = 0; j < placement.length; j++) {
+            const proposedCoordinate = placement[j];
+      
+            const found = ship.locations.some(
+              (location) => location[0] === proposedCoordinate[0] && location[1] === proposedCoordinate[1]
+            );
+      
+            if (found) {
+              console.log('Collision detected!');
+              return true; // Collision detected, return true
+            }
+          }
+        }
+      
+        // No collision detected, return false
+        return false;
+      }
+
     checkPlacementAvailable(start, orientation, length) {
         const invalidPlacement = false;
         const convertedStart = this.convertLocationFromString(start);
@@ -57,44 +79,12 @@ class Gameboard {
 
         // Check if this placement would collide with any other placed ships
 
-
-
-
-        function checkForCollision(placement, remainingShips) {
-            for (let i = 0; i < remainingShips.length; i++) {
-              const ship = remainingShips[i];
-          
-              for (let j = 0; j < placement.length; j++) {
-                const proposedCoordinate = placement[j];
-          
-                // Check if the proposedCoordinate matches any location in the ship
-                const found = ship.locations.some(
-                  (location) => location[0] === proposedCoordinate[0] && location[1] === proposedCoordinate[1]
-                );
-          
-                if (found) {
-                  console.log('Collision detected!');
-                  return true; // Collision detected, return true
-                }
-              }
-            }
-          
-            // No collision detected, return false
-            return false;
-          }
-          
-          const collisionDetected = checkForCollision(proposedPlacement, this.remainingShips);
+          const collisionDetected = this.checkForCollision(proposedPlacement, this.remainingShips);
           
           if (collisionDetected) {
-            console.log('There is a collision!');
             return invalidPlacement;
-          } 
-            console.log('No collision detected.');
+          }           
           
-          
-
-
-
 
         return proposedPlacement;
     }
@@ -114,11 +104,47 @@ class Gameboard {
             J: 10
         };
 
-        return [letterToNumber[loc[0]], parseInt(loc[1], 10)];
+        const convertedLocation = [
+            letterToNumber[loc[0]],
+            parseInt(loc.slice(1), 10)
+          ];
+
+        return convertedLocation;
     }
 
+    recordMissedAttack(miss){
+        this.missesReceived.push(miss);
+    }
 
-    receiveAttack(location) {
+    receiveAttack(hit) {
+
+        const convertedHit = this.convertLocationFromString(hit);
+        console.log(convertedHit);
+
+        const hitCheck = (hitLoc, remainingShips) => {
+            for (let i = 0; i < remainingShips.length; i += 1) {
+              const ship = remainingShips[i];
+                    
+                const found = ship.locations.some(
+                  (location) => location[0] === hitLoc[0] && location[1] === hitLoc[1]
+                );
+          
+                if (found) {
+                  console.log(`${remainingShips[i].ship.name} was hit!`);
+                  remainingShips[i].ship.hit();
+                  return true; // Hit detected, return true
+                }
+            }
+
+            // No hit detected, return false
+            this.recordMissedAttack(hitLoc);
+            return false;
+        }
+    
+        return  hitCheck(convertedHit, this.remainingShips);
+    }
+
+    shipDestroyed(){
 
     }
 

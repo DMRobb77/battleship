@@ -48,8 +48,9 @@ describe('Populating the board with legally placed ships', () => {
 
         const testSub = new Ship('Submarine');
         testBoard.place(testSub, 'B7', 'East');
-    });
 
+        // testBoard.receiveAttack(['B', 6]);
+    });
 
     test('Internal gameboard methods, delete this later', () => {
         expect(testBoard.remainingShips[0].locations).toStrictEqual([[ 4, 3 ], [ 3, 3 ], [ 2, 3 ]]);
@@ -61,6 +62,18 @@ describe('Populating the board with legally placed ships', () => {
 
     test('Recive a false if the ship overlaps another one.', () => {
         expect(testBoard.place(new Ship('Carrier'), 'G4', 'East')).toBeFalsy();
+    })
+
+    test('Receive notification that a ship has been hit', () => {
+        expect(testBoard.receiveAttack('B3')).toBeTruthy();
+    })
+
+    test('Receive notification of a miss', () => {
+        expect(testBoard.receiveAttack('J10')).toBeFalsy();
+    })
+
+    test('Check if misses are appropriately logged', () => {
+        expect(testBoard.missesReceived).toStrictEqual([[10, 10]]);
     })
 
 })
