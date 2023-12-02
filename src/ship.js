@@ -1,9 +1,11 @@
 class Ship {
     constructor(name) {
+        this.id = 0;
         this.name = name;
         this.hits = 0;
         this.sinkStatus = false;
         this.determineType(name);
+        this.locations = [];
     }
 
     determineType(name) {
@@ -30,6 +32,7 @@ class Ship {
 
     hit() {
         this.hits += 1;
+        console.log(`This ${this.name} has sustained ${this.hits} hits`);
         this.checkIfSunk();
     }
 

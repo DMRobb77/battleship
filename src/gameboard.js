@@ -1,13 +1,24 @@
 class Gameboard {
     constructor(){
         this.missesReceived = [];
+        this.hitsReceived = [];
         this.remainingShips = [];
+        this.destroyedShips = [];
+        this.currentShipId = 0;
     }
 
     place(ship, bowLocation, orientation) {
         const placement = this.checkPlacementAvailable(bowLocation, orientation, ship.length);
         if (placement){
-            this.remainingShips.push({ship, locations: placement});
+
+            ship.id = this.currentShipId;
+
+            ship.locations = placement;
+
+            this.remainingShips.push(ship);
+
+            this.currentShipId += 1;
+
         } else {
             console.log('Ship cannot legally be placed here.');
             return false;
@@ -116,23 +127,43 @@ class Gameboard {
         this.missesReceived.push(miss);
     }
 
+    checkAttackPreexisting(hit) {
+        // Returns true if this attack has already occured
+        const allAttacks = this.missesReceived.concat(this.hitsReceived);
+
+        const found = allAttacks.some(innerArray => 
+            innerArray[0] === hit[0] && innerArray[1] === hit[1]
+          );
+
+        return found;
+    }
+
     receiveAttack(hit) {
 
         const convertedHit = this.convertLocationFromString(hit);
-        console.log(convertedHit);
+        if (this.checkAttackPreexisting(convertedHit)) {
+            // If this attack has already occured, render it invalid
+            return 'Invalid attack';
+        }
 
         const hitCheck = (hitLoc, remainingShips) => {
             for (let i = 0; i < remainingShips.length; i += 1) {
-              const ship = remainingShips[i];
+                const ship = remainingShips[i];
                     
                 const found = ship.locations.some(
                   (location) => location[0] === hitLoc[0] && location[1] === hitLoc[1]
                 );
           
                 if (found) {
-                  console.log(`${remainingShips[i].ship.name} was hit!`);
-                  remainingShips[i].ship.hit();
-                  return true; // Hit detected, return true
+                    // A ship matches this location, mark it as hit then check
+                    // to see if this hit was enough to sink it
+                    const struckShip = remainingShips[i];
+                    struckShip.hit();
+
+                    if (struckShip.sinkStatus){ this.shipDestroyed(struckShip) }; 
+                    this.hitsReceived.push(hitLoc);
+
+                    return true;
                 }
             }
 
@@ -140,16 +171,20 @@ class Gameboard {
             this.recordMissedAttack(hitLoc);
             return false;
         }
-    
+
         return  hitCheck(convertedHit, this.remainingShips);
     }
 
-    shipDestroyed(){
+    shipDestroyed(destroyedShip){
+        this.destroyedShips.push(destroyedShip);
 
+        const indexToRemove = this.remainingShips
+            .findIndex(ship => ship.id === destroyedShip.id);
+        
+        this.remainingShips.splice(indexToRemove, 1);
+        
     }
 
-
 }
-
 
 export default Gameboard;
