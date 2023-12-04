@@ -5,6 +5,7 @@ class Gameboard {
         this.remainingShips = [];
         this.destroyedShips = [];
         this.currentShipId = 0;
+        this.boardCleared = false;
     }
 
     place(ship, bowLocation, orientation) {
@@ -182,7 +183,15 @@ class Gameboard {
             .findIndex(ship => ship.id === destroyedShip.id);
         
         this.remainingShips.splice(indexToRemove, 1);
-        
+
+        this.checkBoardCleared();
+    }
+
+    checkBoardCleared(){
+        if (this.remainingShips.length === 0){
+            this.boardCleared = true;
+        }
+        console.log('GAME OVER');
     }
 
 }

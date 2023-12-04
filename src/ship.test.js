@@ -1,8 +1,8 @@
 import Ship from "./ship";
 import Gameboard from "./gameboard";
+import Player from "./player";
 
 const testCruiser = new Ship('Cruiser');
-
 const testBoard = new Gameboard();
 
 
@@ -98,15 +98,50 @@ describe('Populating the board with legally placed ships', () => {
         test('Does the list of remaining ships empty out and the list of destroyed ships fill?', () => {
             expect(testBoard.remainingShips.length).toBe(0);
             expect(testBoard.destroyedShips.length).toBe(3);
+            expect(testBoard.boardCleared).toBeTruthy();
         })
-
-
     })
-
-
 })
 
 
+describe('Setting up a real game with players', () => {
+
+    const player1Board = new Gameboard();
+    const player2Board = new Gameboard();
+
+    const player1 = new Player('Player 1', true, true, player1Board);
+    const player2 = new Player('Player 2', true, true, player2Board);
 
 
+    beforeAll(() => {
 
+        player1.opponent = player2;
+        player2.opponent = player1;
+
+ 
+        // player1.gameboard.place(player1.startingInventory.battleship)
+
+    })
+    
+
+    test('Do we succesfully create two players and assign them as opponents?', () => {
+        expect(player1.opponent).toBe(player2);
+        expect(player2.opponent).toBe(player1);
+    })
+
+    test('Do we succesfully start the players with a full inventory of ships?', () => {
+        expect(player1.startingInventory.carrier.name).toBe('Carrier');
+        expect(player2.startingInventory.destroyer.name).toBe('Destroyer');
+    })
+
+    test(`Can we succesfully place ships on the board?`, () => {
+        expect(player1.gameboard.place(player1.startingInventory.carrier, 'G1', 'North')).toBeTruthy();
+        expect(player1.gameboard.place(player1.startingInventory.destroyer, 'H1', 'North')).toBeFalsy();
+        expect(player2.gameboard.place(player2.startingInventory.submarine, 'F4', 'West')).toBeTruthy();
+    })
+
+    test(`Can players succesfully send shots to each other?`, () => {
+        expect(player1.sendAttack('F4')).toBeTruthy();
+    })
+
+})
