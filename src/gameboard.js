@@ -55,6 +55,9 @@ class Gameboard {
         const proposedPlacement = [];
         proposedPlacement.push(convertedStart);
 
+        console.log(`We are placing at ${start} with an orientation 
+            of ${orientation} a ship of length ${length}`);
+
         for (let i = 1; i < length; i += 1){
             switch (orientation) {
                 case 'North':
@@ -161,8 +164,11 @@ class Gameboard {
                     const struckShip = remainingShips[i];
                     struckShip.hit();
 
-                    if (struckShip.sinkStatus){ this.shipDestroyed(struckShip) }; 
                     this.hitsReceived.push(hitLoc);
+
+                    if (struckShip.sinkStatus){ 
+                        return this.shipDestroyed(struckShip);
+                    }; 
 
                     return true;
                 }
@@ -183,15 +189,16 @@ class Gameboard {
             .findIndex(ship => ship.id === destroyedShip.id);
         
         this.remainingShips.splice(indexToRemove, 1);
+        
+        this.checkBoardCleared()
 
-        this.checkBoardCleared();
+        return this.boardCleared ? 'You win!' : destroyedShip.name;
     }
 
     checkBoardCleared(){
         if (this.remainingShips.length === 0){
             this.boardCleared = true;
         }
-        console.log('GAME OVER');
     }
 
 }
