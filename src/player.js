@@ -1,3 +1,4 @@
+import GUIManager from "./GUI-manager";
 import Ship from "./ship";
 
 class Player {
@@ -65,6 +66,7 @@ class Player {
         } else if (typeof hitStatus === 'string' && hitStatus !== 'Invalid attack'){
             console.log('SHIP HAS BEEN DESTROYED --------')
             this.pursuingHitShip = false;
+            this.lastTwoMovesHit = false;
             this.deliberateAttacks = [];
             this.destroyedEnemyShip(hitStatus);
         } else if (hitStatus === true && !this.pursuingHitShip){
@@ -75,9 +77,9 @@ class Player {
             this.deliberateAttacks.push(targetLocation);
         } else if (hitStatus === false){
             this.lastTwoMovesHit = false;
-        } else {
-            return hitStatus;
         }
+
+        console.log(`Removing ${targetLocation} from the legal list`);
 
         this.removeAttackFromLegalList(targetLocation);
 
@@ -97,23 +99,45 @@ class Player {
         return this.legalAttacks[attackIndex];
     }
 
-    generateRandomFollowupAttack(){
-        const north = String.fromCharCode(this.lastRandomAttack.charCodeAt(0) - 1)
-            + this.lastRandomAttack[1];
+    generateRandomFollowupAttack(attackCenter){
 
-        const south = String.fromCharCode(this.lastRandomAttack.charCodeAt(0) + 1)
-        + this.lastRandomAttack[1];
+        const attackCenterCodeNorth = attackCenter.charCodeAt(0) - 1;
+        const attackCenterCodeSouth = attackCenter.charCodeAt(0) + 1;
 
-        const east = this.lastRandomAttack[0] + (this.lastRandomAttack[1] - 1);
-
-        const west = this.lastRandomAttack[0] + (parseInt(this.lastRandomAttack[1], 10) + 1);
+        const north = String.fromCharCode(attackCenterCodeNorth) + attackCenter[1];
+        const south = String.fromCharCode(attackCenterCodeSouth) + attackCenter[1];
+        const east = attackCenter[0] + (attackCenter[1] - 1);
+        const west = attackCenter[0] + (parseInt(attackCenter[1], 10) + 1);
 
         const followupMoves = [north, south, east, west];
 
+        console.log(`Starting with the followup moves ${JSON.stringify(followupMoves)}`);
+
+        const movesToRemove = [];
+
+        // Remove all illegal options
         for (let i = 0; i < 4; i +=1 ){
             if (this.legalAttacks.indexOf(followupMoves[i]) < 0){
-                followupMoves.splice(i, 1);
+                console.log(`*******Removing ${followupMoves[i]} at index ${i} for fucks sake`);
+                movesToRemove.push(followupMoves[i]);
             }
+        }
+
+        console.log(`Here's the moves we are removing ${JSON.stringify(movesToRemove)}`);
+
+        if (movesToRemove.length > 0){
+            for (let i = 0; i < movesToRemove.length; i += 1){
+                const index = followupMoves.indexOf(movesToRemove[i])
+                if (index > 0){
+                    followupMoves.splice(index, 1);
+                }
+            }
+        }
+
+        console.log(`-- -- -- Picking a followup move from ${JSON.stringify(followupMoves)} -- -- --`);
+
+        if (followupMoves.length === 0){
+            return this.generateRandomLegalAttack();
         }
         
         return followupMoves[Math.floor(Math.random() * followupMoves.length)];
@@ -126,80 +150,71 @@ class Player {
         const oneAttackBack = this.deliberateAttacks[this.deliberateAttacks.length - 1];
 
         if (oneAttackBack[0].charCodeAt(0) > twoAttacksBack.charCodeAt(0)){
+
             attack = String.fromCharCode(oneAttackBack.charCodeAt(0) + 1) 
                 + oneAttackBack[1];
-            return attack;
-        }
 
-        if (oneAttackBack[0].charCodeAt(0) < twoAttacksBack.charCodeAt(0)){
+        } else if (oneAttackBack[0].charCodeAt(0) < twoAttacksBack.charCodeAt(0)){
+
             attack = String.fromCharCode(oneAttackBack.charCodeAt(0) -1) 
                 + oneAttackBack[1];
-            return attack;
-        }
 
-        if (oneAttackBack[1] > twoAttacksBack[1]){
+        } else if (oneAttackBack[1] > twoAttacksBack[1]){
+
             attack = oneAttackBack[0] + (parseInt(oneAttackBack[1], 10) + 1);
-            return attack;
-        }
 
-        if (oneAttackBack[1] < twoAttacksBack[1]){
+        } else if (oneAttackBack[1] < twoAttacksBack[1]){
+
             attack = oneAttackBack[0] + (parseInt(oneAttackBack[1], 10) - 1);
-            return attack;
+
         }
-    }
 
-    generateDoubleBackAttack(){
-        const firstAttack = this.deliberateAttacks[0];
-
-        if (firstAttack[0] === this.deliberateAttacks[this.deliberateAttacks.length - 1][0]){
-            const option1 = firstAttack[0] + (parseInt(firstAttack[1], 10) + 1);
-            const option2 = firstAttack[0] + (parseInt(firstAttack[1], 10) + 1);
-            console.log(`We're on the same horizontal, our options are ${option1} and
-                ${option2}`);
-        };
-
-        if (firstAttack[1] === this.deliberateAttacks[this.deliberateAttacks.length - 1][1]){
-            console.log(`We're on the same vertical`);
-        };
-
-        return 'A1';
+        return this.legalAttacks.indexOf(attack) > 0 ? 
+            attack : 
+            this.generateRandomFollowupAttack(this.deliberateAttacks[0]);
     }
 
     generateAttack(){
         let attack;
 
+        console.log(`The current state of our many bools: Last two moves hit is ${this.lastTwoMovesHit}, Pursuing hit ship is ${this.pursuingHitShip}, and our Deliberate attack is list ${JSON.stringify(this.deliberateAttacks)}, while last random attack was ${this.lastRandomAttack}`);
+
         // If a ship has already been struck, pursue sinking it
 
         if (this.pursuingHitShip && !this.lastTwoMovesHit){
-            if (this.deliberateAttacks.length >= 2){
-                attack = this.generateDoubleBackAttack();
-                console.log(`Doubling back to ${attack}`);
-            } else {
-                attack = this.generateRandomFollowupAttack();
-            }
 
-            console.log(`The followup move is ${attack}`);
+            if (this.deliberateAttacks.length >= 2){
+
+                // If a ship has been struck twice, but we just missed,
+                // attack in a grid emanating from the first hit
+
+                attack = this.generateRandomFollowupAttack(this.deliberateAttacks[0]);
+                console.log(`Doubling back to ${attack}`);
+
+            } else {
+
+                attack = this.generateRandomFollowupAttack(this.lastRandomAttack);
+
+                console.log(`The random followup move is ${attack}`);
+
+            }
 
         } else if (this.pursuingHitShip && this.lastTwoMovesHit){
 
             attack = this.generateDeliberateFollowupAttack();
-
-            console.log(`The last two attacks are ${this.deliberateAttacks},
-                meaning the followup is ${attack}`);
+            console.log(`The last two attacks hit, and the moves that have hit are ${this.deliberateAttacks}, meaning the deliberate followup is ${attack}`);
 
         } else {
 
             // If a ship has not been struck, attack randomly
 
             attack = this.generateRandomLegalAttack();
-
             console.log(`Generating random attack ${attack}`);
-
             this.lastRandomAttack = attack;
+
         }
 
         return this.sendAttack(attack);
-
     }
 
     randomlyPopulateBoardWithShips(){
@@ -237,7 +252,6 @@ class Player {
                 this.generateRandomLegalAttack(),
                 randomOrientation()
                 );
-
             if (placement !== false){
                 placedShips -= 1;
             }

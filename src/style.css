@@ -1,0 +1,36 @@
+h2 {
+    color: red;
+}
+
+/* Header */
+
+
+/* Body */
+
+/* Gameboards */
+
+.gameboards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.gameboards div {
+    border: 1px solid red;
+    display: grid;
+    grid-template-rows: repeat(11, 2.5rem);
+    grid-template-columns: repeat(11, 2.5rem);
+}
+
+.player-board .gridsquare:hover {
+    background-color: black;
+}
+
+.opponent-board .gridsquare:hover {
+    background-color: red;
+}
+
+.ship {
+    background-color: blue;
+}
+
+/* Footer */
