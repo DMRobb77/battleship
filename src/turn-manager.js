@@ -21,6 +21,22 @@ class TurnManager {
         this.gui.placeShips(this.player.gameboard.remainingShips, 'player');
         this.cpu.randomlyPopulateBoardWithShips();
         this.gui.placeShips(this.cpu.gameboard.remainingShips, 'opponent');
+
+        this.gui.currentPhase = false;
+        this.player.currentPhase = true;
+    }
+    
+    playerMove(coord){
+        console.log(coord);
+
+        this.player.sendAttack(coord);
+    }
+
+    cpuMove(){
+        const attack = this.cpu.generateAttack()
+        const gridSquare = attack.targetLocation;
+        this.gui.attackPlayerSquare(gridSquare);
+
     }
 
 }

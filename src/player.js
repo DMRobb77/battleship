@@ -83,7 +83,7 @@ class Player {
 
         this.removeAttackFromLegalList(targetLocation);
 
-        return hitStatus;
+        return { hitStatus, targetLocation} ;
     }
 
     removeAttackFromLegalList(attack){

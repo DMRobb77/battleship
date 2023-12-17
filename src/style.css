@@ -33,4 +33,12 @@ h2 {
     background-color: blue;
 }
 
+.struck {
+    background-color: green;
+}
+
+.miss {
+    background-color: yellow;
+}
+
 /* Footer */
