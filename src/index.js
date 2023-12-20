@@ -8,6 +8,6 @@ const turnManager = new TurnManager(displayManager);
 displayManager.setTurnManager(turnManager);
 
 displayManager.initialPageSetup();
-turnManager.setupGame();
+turnManager.setupBoard();
 
 console.log('Testamuo.');

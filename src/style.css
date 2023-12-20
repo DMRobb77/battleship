@@ -6,12 +6,29 @@ h2 {
 
 
 /* Body */
+body{
+    background: url('/src/ocean-bg.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.player-labels{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.player-labels>span{
+    color: white;
+    justify-self: center;
+}
 
 /* Gameboards */
 
 .gameboards {
     display: grid;
     grid-template-columns: 1fr 1fr;
+    padding: 0 4rem;
+    justify-content: space-between;
 }
 
 .gameboards div {
@@ -21,8 +38,17 @@ h2 {
     grid-template-columns: repeat(11, 2.5rem);
 }
 
-.player-board .gridsquare:hover {
-    background-color: black;
+.gameboards>div {
+    justify-self: center;
+    border: none;
+}
+
+.gameboards .label{
+    border: none;
+    color: white;
+    text-align: center;
+    font-size: 1.4rem;
+    padding-top: 0.3rem;
 }
 
 .opponent-board .gridsquare:hover {

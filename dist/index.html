@@ -8,17 +8,116 @@
 <body>
     <script src="main.js"></script>
     <div class="main">
-        <div class="header"></div>
+        <div class="header">
+            <h1>Battleship</h1>
+        </div>
         <div class="body">
-            <div class="player-labels"></div>
-            <div class="announcements"></div>
+            <div class="player-labels">
+                <span>Player</span>
+                <span>CPU</span>
+            </div>
+            <div class="announcements">
+                <span>announcements</span>
+            </div>
                 <div class="gameboards">
                     <div class="player-board"></div>
                     <div class="opponent-board"></div>
                 </div>
-            <div class="ship-tray"></div>
+                <div class="underboard">
+                    <div class="ship-tray">
+                        <div class="carrier">
+                            <span>Carrier</span>
+                            <span>Length: 5</span>
+                            <form>
+                                <label for="coord">Bow Coordinates</label>
+                                <input type="text" name="coord" id="coord" minlength="2"
+                                    maxlength="3" pattern="^[A-Ja-j]([1-9]|10)$" required>
+                                <label for="orientation">Orientation</label>
+                                <select name="orientation" id="orientation">
+                                    <option value="North">North</option>
+                                    <option value="South">South</option>
+                                    <option value="East">East</option>
+                                    <option value="West">West</option>
+                                </select>
+                                <button type="submit">Place</button>
+                            </form>
+                        </div>
+                        <div class="battleship">
+                            <span>Battleship</span>
+                            <span>Length: 4</span>
+                            <form>
+                                <label for="coord">Bow Coordinates</label>
+                                <input type="text" name="coord" id="coord" minlength="2"
+                                    maxlength="3" pattern="^[A-Ja-j]([1-9]|10)$" required>
+                                <label for="orientation">Orientation</label>
+                                <select name="orientation" id="orientation">
+                                    <option value="North">North</option>
+                                    <option value="South">South</option>
+                                    <option value="East">East</option>
+                                    <option value="West">West</option>
+                                </select>
+                                <button type="submit">Place</button>
+                            </form>
+                        </div>
+                        <div class="cruiser">
+                            <span>Cruiser</span>
+                            <span>Length: 3</span>
+                            <form>
+                                <label for="coord">Bow Coordinates</label>
+                                <input type="text" name="coord" id="coord" minlength="2"
+                                    maxlength="3" pattern="^[A-Ja-j]([1-9]|10)$" required>
+                                <label for="orientation">Orientation</label>
+                                <select name="orientation" id="orientation">
+                                    <option value="North">North</option>
+                                    <option value="South">South</option>
+                                    <option value="East">East</option>
+                                    <option value="West">West</option>
+                                </select>
+                                <button type="submit">Place</button>
+                            </form>
+                        </div>
+                        <div class="submarine">
+                            <span>Submarine</span>
+                            <span>Length: 3</span>
+                            <form>
+                                <label for="coord">Bow Coordinates</label>
+                                <input type="text" name="coord" id="coord" minlength="2"
+                                    maxlength="3" pattern="^[A-Ja-j]([1-9]|10)$" required>
+                                <label for="orientation">Orientation</label>
+                                <select name="orientation" id="orientation">
+                                    <option value="North">North</option>
+                                    <option value="South">South</option>
+                                    <option value="East">East</option>
+                                    <option value="West">West</option>
+                                </select>
+                                <button type="submit">Place</button>
+                            </form>
+                        </div>
+                        <div class="destroyer">
+                            <span>Destroyer</span>
+                            <span>Length: 2</span>
+                            <form>
+                                <label for="coord">Bow Coordinates</label>
+                                <input type="text" name="coord" id="coord" minlength="2"
+                                    maxlength="3" pattern="^[A-Ja-j]([1-9]|10)$" required>
+                                <label for="orientation">Orientation</label>
+                                <select name="orientation" id="orientation">
+                                    <option value="North">North</option>
+                                    <option value="South">South</option>
+                                    <option value="East">East</option>
+                                    <option value="West">West</option>
+                                </select>
+                                <button type="submit">Place</button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="destroyed-ships">
+                    </div>
+                </div>
         </div>
-        <div class="footer"></div>
+        <div class="footer">
+            <span>Background image by <a href="https://unsplash.com/@conorsexton">Conor Sexton from Unsplash</a></span>
+        </div>
     </div>
 </body>
 </html>

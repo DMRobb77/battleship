@@ -118,7 +118,7 @@ class Player {
         // Remove all illegal options
         for (let i = 0; i < 4; i +=1 ){
             if (this.legalAttacks.indexOf(followupMoves[i]) < 0){
-                console.log(`*******Removing ${followupMoves[i]} at index ${i} for fucks sake`);
+                console.log(`*******Removing ${followupMoves[i]} at index ${i}`);
                 movesToRemove.push(followupMoves[i]);
             }
         }
@@ -128,7 +128,7 @@ class Player {
         if (movesToRemove.length > 0){
             for (let i = 0; i < movesToRemove.length; i += 1){
                 const index = followupMoves.indexOf(movesToRemove[i])
-                if (index > 0){
+                if (index >= 0){
                     followupMoves.splice(index, 1);
                 }
             }
@@ -136,7 +136,7 @@ class Player {
 
         console.log(`-- -- -- Picking a followup move from ${JSON.stringify(followupMoves)} -- -- --`);
 
-        if (followupMoves.length === 0){
+        if (followupMoves.length === 0 || movesToRemove.length === 4){
             return this.generateRandomLegalAttack();
         }
         
