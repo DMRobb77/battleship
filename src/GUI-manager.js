@@ -83,7 +83,7 @@ class GUIManager {
     
             setTimeout(() => {
                 this.turnManager.cpuMove();
-            }, 1000);
+            }, 800);
         
     }
 
@@ -146,9 +146,38 @@ class GUIManager {
 
         if (winner === "player"){
             announcements.innerText = `You win!`;
+            this.displayAnnouncement();
         } else {
             announcements.innerText = 'You lose!';
+            this.displayAnnouncement();
         }
+
+
+        const resetButton = document.querySelector('.reset button')
+        resetButton.parentElement.style.display = 'flex';
+        resetButton.addEventListener('click', () => {
+            window.location.reload()
+        })
+
+    }
+
+    displayAnnouncement(){
+        const announcementModal = document.querySelector('.announcements');
+        announcementModal.style.display = 'block';
+        announcementModal.style.opacity = '100';
+
+        setTimeout(() => {
+            this.closeAnnouncement();
+          }, 3000);
+    }
+
+    closeAnnouncement(){
+        const announcementModal = document.querySelector('.announcements');
+        announcementModal.style.opacity = '0';
+
+        setTimeout(() => {
+            announcementModal.style.display = 'none';
+          }, 1000);
     }
 
     alertShipDestroyed(shipName, owner){
@@ -158,10 +187,22 @@ class GUIManager {
             this.gameOver(owner);
         } else if (owner === 'player'){
             announcements.innerText = `You destroyed the enemy ${shipName}!`;
+            this.displayAnnouncement();
             this.displayEnemyShipDestroyed(shipName);
         } else {
+            this.displayAnnouncement();
             announcements.innerText = `Your ${shipName} has been destroyed!`;
+            this.displayAnnouncement();
         }
+    }
+
+    beginGame(){
+        const destroyedEnemyShipHeader = document.querySelector('.start-message');
+        destroyedEnemyShipHeader.innerText = 'Destroyed CPU ships:'
+
+        const announcements = document.querySelector('.announcements span');
+        announcements.innerText = `All ships placed! Begin hunting CPU ships!`;
+        this.displayAnnouncement();
     }
 
     displayEnemyShipDestroyed(shipName){
@@ -169,9 +210,15 @@ class GUIManager {
         const shipDiv = document.createElement('div');
         destroyedList.append(shipDiv);
         shipDiv.classList.add(`destroyed-shipname`);
-        
+
+        const sunkGridSquares = document.querySelectorAll(`.opponent-board .${shipName.toLowerCase()}`);
+        sunkGridSquares.forEach((square) => {
+            square.classList.add('sunk');
+        })
+
         const shipText = document.createElement('span');
         shipText.innerText = shipName;
+        shipText.classList.add(`${shipName.toLowerCase()}`);
         shipDiv.append(shipText);
     }
 
@@ -225,11 +272,14 @@ class GUIManager {
     }
 
     hideShipInput(form){
-        form.style.visibility = 'hidden';
+        form.classList.add('hidden-form');
     }
 
     shipCannotBePlaced(){
         console.log('Invalid placement');
+        const announcements = document.querySelector('.announcements span');
+        announcements.innerText = "Sorry, that placement won't work.";
+        this.displayAnnouncement();
     }
 
     placeShips(ships, gameboard){
@@ -243,6 +293,7 @@ class GUIManager {
                 console.log(selector);
                 const gridDiv = document.querySelector(selector);
                 gridDiv.classList.add('ship');
+                gridDiv.classList.add(`${ships[i].name.toLowerCase()}`);
             }
         }
 

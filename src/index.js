@@ -1,3 +1,4 @@
+import './normalize.css';
 import './style.css';
 import GUIManager from './GUI-manager';
 import TurnManager from './turn-manager';
@@ -9,5 +10,3 @@ displayManager.setTurnManager(turnManager);
 
 displayManager.initialPageSetup();
 turnManager.setupBoard();
-
-console.log('Testamuo.');

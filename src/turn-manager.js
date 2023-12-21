@@ -47,6 +47,7 @@ class TurnManager {
     }
 
     allUserShipsPlaced(){
+        this.gui.beginGame();
         this.gui.currentPhase.setup = false;
         this.gui.currentPhase.playerTurn = true;
     }

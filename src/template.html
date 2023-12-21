@@ -11,13 +11,13 @@
         <div class="header">
             <h1>Battleship</h1>
         </div>
+        <div class="announcements">
+            <div class="modal"><span>announcements</span></div>
+        </div>
         <div class="body">
             <div class="player-labels">
                 <span>Player</span>
                 <span>CPU</span>
-            </div>
-            <div class="announcements">
-                <span>announcements</span>
             </div>
                 <div class="gameboards">
                     <div class="player-board"></div>
@@ -29,10 +29,10 @@
                             <span>Carrier</span>
                             <span>Length: 5</span>
                             <form>
-                                <label for="coord">Bow Coordinates</label>
+                                <label for="coord">Bow Coordinates:</label>
                                 <input type="text" name="coord" id="coord" minlength="2"
                                     maxlength="3" pattern="^[A-Ja-j]([1-9]|10)$" required>
-                                <label for="orientation">Orientation</label>
+                                <label for="orientation">Orientation:</label>
                                 <select name="orientation" id="orientation">
                                     <option value="North">North</option>
                                     <option value="South">South</option>
@@ -46,10 +46,10 @@
                             <span>Battleship</span>
                             <span>Length: 4</span>
                             <form>
-                                <label for="coord">Bow Coordinates</label>
+                                <label for="coord">Bow Coordinates:</label>
                                 <input type="text" name="coord" id="coord" minlength="2"
                                     maxlength="3" pattern="^[A-Ja-j]([1-9]|10)$" required>
-                                <label for="orientation">Orientation</label>
+                                <label for="orientation">Orientation:</label>
                                 <select name="orientation" id="orientation">
                                     <option value="North">North</option>
                                     <option value="South">South</option>
@@ -63,10 +63,10 @@
                             <span>Cruiser</span>
                             <span>Length: 3</span>
                             <form>
-                                <label for="coord">Bow Coordinates</label>
+                                <label for="coord">Bow Coordinates:</label>
                                 <input type="text" name="coord" id="coord" minlength="2"
                                     maxlength="3" pattern="^[A-Ja-j]([1-9]|10)$" required>
-                                <label for="orientation">Orientation</label>
+                                <label for="orientation">Orientation:</label>
                                 <select name="orientation" id="orientation">
                                     <option value="North">North</option>
                                     <option value="South">South</option>
@@ -80,10 +80,10 @@
                             <span>Submarine</span>
                             <span>Length: 3</span>
                             <form>
-                                <label for="coord">Bow Coordinates</label>
+                                <label for="coord">Bow Coordinates:</label>
                                 <input type="text" name="coord" id="coord" minlength="2"
                                     maxlength="3" pattern="^[A-Ja-j]([1-9]|10)$" required>
-                                <label for="orientation">Orientation</label>
+                                <label for="orientation">Orientation:</label>
                                 <select name="orientation" id="orientation">
                                     <option value="North">North</option>
                                     <option value="South">South</option>
@@ -97,10 +97,10 @@
                             <span>Destroyer</span>
                             <span>Length: 2</span>
                             <form>
-                                <label for="coord">Bow Coordinates</label>
+                                <label for="coord">Bow Coordinates:</label>
                                 <input type="text" name="coord" id="coord" minlength="2"
                                     maxlength="3" pattern="^[A-Ja-j]([1-9]|10)$" required>
-                                <label for="orientation">Orientation</label>
+                                <label for="orientation">Orientation:</label>
                                 <select name="orientation" id="orientation">
                                     <option value="North">North</option>
                                     <option value="South">South</option>
@@ -111,7 +111,16 @@
                             </form>
                         </div>
                     </div>
-                    <div class="destroyed-ships">
+                    <div class="right-tray">
+                        <div class="destroyed-ships">
+                            <div class="start-message">
+                                <span>⬅️ Please place all of your ships to start!</span>
+                            </div>
+                        </div>
+                        <div class="reset">
+                            <button type="button">Play Again</button>
+                        </div>
+    
                     </div>
                 </div>
         </div>
